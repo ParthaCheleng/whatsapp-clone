@@ -1,27 +1,27 @@
 import { Router } from "express";
-import crypto from "node:crypto";
 import Message from "../models/Message.js";
+const router = Router();
 
-export const messages = Router();
+router.get("/", async (req, res) => {
+  const wa_id = req.query.wa_id as string | undefined;
+  if (!wa_id) return res.status(400).json({ error: "wa_id required" });
+  const rows = await Message.find({ wa_id }).sort({ timestamp: 1 }).lean();
+  res.json(rows);
+});
 
-messages.post("/", async (req, res) => {
+// Store a new outgoing message (Task-3)
+router.post("/", async (req, res) => {
   const { wa_id, text, name } = req.body || {};
-  if (!wa_id || !text) return res.status(400).json({ ok: false, error: "wa_id and text required" });
-
-  const now = new Date();
+  if (!wa_id || !text) return res.status(400).json({ error: "wa_id and text required" });
   const doc = await Message.create({
-    message_id: null,
-    meta_msg_id: crypto.randomUUID(),
-    wa_id,
-    name: name ?? null,
+    wa_id, name,
     direction: "outgoing",
     type: "text",
     text,
-    media: null,
-    timestamp: now,
+    timestamp: new Date(),
     status: "sent",
-    status_history: [{ status: "sent", timestamp: now }],
-    last_updated_at: now
   });
   res.status(201).json(doc);
 });
+
+export default router;
