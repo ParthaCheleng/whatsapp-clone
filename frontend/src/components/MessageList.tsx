@@ -18,8 +18,10 @@ function StatusBadge({ status }: { status?: string }) {
 
 export default function MessageList({
   messages = [] as Message[],
+  className = "",
 }: {
   messages?: Message[];
+  className?: string;
 }) {
   const endRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,8 +30,8 @@ export default function MessageList({
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-50">
-      <div className="max-w-3xl mx-auto w-full p-4 space-y-2">
+    <div className={className}>
+      <div className="max-w-3xl mx-auto w-full space-y-2">
         {messages.map((m) => {
           const time =
             m.timestamp &&
@@ -43,7 +45,7 @@ export default function MessageList({
           return (
             <div key={m._id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
               <div
-                className={`w-fit max-w-[80%] px-3 py-2 rounded-2xl text-sm shadow-sm ${
+                className={`w-fit max-w-[85vw] md:max-w-[80%] break-words px-3 py-2 rounded-2xl text-sm shadow-sm ${
                   mine ? "bg-blue-600 text-white" : "bg-white border"
                 }`}
                 title={m.timestamp}

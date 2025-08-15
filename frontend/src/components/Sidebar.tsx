@@ -17,11 +17,13 @@ export default function Sidebar({
 }: {
   items: Conversation[];
   activeWaId?: string;
-  onSelect: (id: string) => void;
+  onSelect: (c: Conversation) => void; // return the *conversation object*
 }) {
   return (
-    <aside className="w-80 border-r bg-white overflow-y-auto">
-      <div className="p-4 text-lg font-semibold">Chats</div>
+    <aside className="h-full w-full md:w-80 border-r bg-white overflow-y-auto">
+      <div className="h-14 px-3 flex items-center border-b bg-white text-sm md:text-base font-semibold">
+        Chats
+      </div>
       <ul>
         {items.map((c) => {
           const when = c.lastTimestamp
@@ -31,7 +33,7 @@ export default function Sidebar({
           return (
             <li
               key={c.wa_id}
-              onClick={() => onSelect(c.wa_id)}
+              onClick={() => onSelect(c)}
               className={clsx(
                 "px-4 py-3 cursor-pointer hover:bg-gray-50 border-b",
                 activeWaId === c.wa_id && "bg-green-50"
